@@ -109,5 +109,23 @@ for _, row in df.iterrows():
 
 df_expanded
 
-# %%
+#%%
+df = df_expanded
 
+# %%
+jepson = pd.read_csv("jepson_eflora.csv")
+
+# replace subsp. with ssp.
+jepson["Scientific Name"] = jepson["Scientific Name"].str.replace("subsp.", "ssp.")
+
+# %% match scientific names in df and jepson and add URL to df
+def get_jepson_url(scientific_name):
+    try:
+        url = jepson[jepson["Scientific Name"] == scientific_name]["URL"].values[0]
+        return url
+    except:
+        return None
+
+# %%
+df["Jepson URL"] = df["Scientific Name"].apply(get_jepson_url)
+# %%
